@@ -1258,7 +1258,7 @@
       </svg>
       <div id="undressMessage" style="position: absolute; top: 58%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; opacity: 0; transition: opacity 0.8s; pointer-events: none; z-index: 10;"></div>
     </div>
-    <div style="font-size: 3rem; margin-top: 1rem;">😘</div>
+    <button class="continue-btn begin-btn visible" onclick="startAgain()" style="margin-top: 2rem;">Start Again?</button>
   </div>
 
   <!-- Scroll indicator -->
@@ -1617,6 +1617,12 @@
       const msg = document.getElementById('undressMessage');
       msg.textContent = '😏';
       msg.style.opacity = '1';
+    }
+
+    function startAgain() {
+      window.scrollTo(0, 0);
+      history.scrollRestoration = 'manual';
+      location.reload();
     }
 
     // ===== SCROLL INDICATOR =====
