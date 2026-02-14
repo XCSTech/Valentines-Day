@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Magical Valentine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      min-height: 100vh;
+      background: #0a0015;
+      color: #f0e6d3;
+      font-family: 'Crimson Text', serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Floating particles (stars & sparks) */
+    .particles-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: float-up linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes float-up {
+      0% { opacity: 0; transform: translateY(100vh) rotate(0deg); }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-10vh) rotate(720deg); }
+    }
+
+    /* Sections — mobile-first */
+    .section {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+      position: relative;
+      z-index: 1;
+      margin-top: -1px;
+    }
+
+    /* ===== INTRO SECTION ===== */
+    #intro {
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0015 70%);
+    }
+
+    .owl-icon {
+      font-size: 5rem;
+      margin-bottom: 0.8rem;
+      animation: owl-bob 2s ease-in-out infinite;
+    }
+
+    @keyframes owl-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .intro-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.4rem;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      background: linear-gradient(135deg, #d4a017, #f0d68a, #d4a017);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    /* Envelope scene wrapper */
+    .envelope-scene {
+      position: relative;
+      width: 340px;
+      height: 330px;
+      cursor: pointer;
+    }
+
+    .envelope-scene:active { transform: scale(0.98); }
+
+    /* The letter — starts hidden behind envelope, rises up then lands on top */
+    .letter {
+      position: absolute;
+      bottom: 5px;
+      left: 5%;
+      width: 90%;
+      height: 220px;
+      background: #f5e6c8;
+      border-radius: 4px;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #3a2800;
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.8rem;
+      text-align: center;
+      padding: 1.2rem 1rem;
+      line-height: 1.5;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    }
+
+    .envelope-scene.opened .letter {
+      animation: letter-out 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+    }
+
+    @keyframes letter-out {
+      0%   { transform: translateY(0) rotate(0deg); z-index: 1; }
+      50%  { transform: translateY(-200px) rotate(-2deg); z-index: 1; }
+      51%  { z-index: 10; }
+      100% { transform: translateY(-20px) rotate(-3deg); z-index: 10; }
+    }
+
+    /* Envelope sits on top of letter */
+    .envelope {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 240px;
+      z-index: 2;
+      perspective: 800px;
+    }
+
+    .envelope-body {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #8B0000, #b22222);
+      border-radius: 8px;
+      position: relative;
+      box-shadow: 0 8px 30px rgba(139, 0, 0, 0.5);
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 50%;
+      background: linear-gradient(180deg, #a01010, #8B0000);
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      transition: transform 0.6s ease-in-out;
+      transform-origin: top center;
+      z-index: 4;
+    }
+
+    .envelope-scene.opened .envelope-flap {
+      transform: rotateX(180deg);
+    }
+
+    .wax-seal {
+      position: absolute;
+      bottom: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle, #d4a017, #8B6914);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #3a2800;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5), inset 0 1px 3px rgba(255,255,255,0.3);
+      z-index: 5;
+      transition: opacity 0.4s ease 0.2s;
+    }
+
+    .envelope-scene.opened .wax-seal { opacity: 0; }
+
+    .intro-subtitle {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: #c9a96e;
+      margin-top: 1.5rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-align: center;
+    }
+
+    .intro-subtitle.visible { opacity: 1; }
+
+    .continue-btn.begin-btn {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+      margin-top: 2.5rem;
+      padding: 1.2rem 2.5rem;
+      font-size: 1.4rem;
+    }
+
+    .begin-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .tap-hint {
+      font-size: 1.4rem;
+      color: #8a7a6a;
+      margin-top: 0.8rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== SORTING HAT SECTION ===== */
+    #sorting-hat {
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0015 70%);
+    }
+
+    .hat-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .sorting-hat-svg {
+      width: 150px;
+      height: 150px;
+      filter: drop-shadow(0 0 20px rgba(212, 160, 23, 0.3));
+      animation: hat-wobble 4s ease-in-out infinite;
+    }
+
+    @keyframes hat-wobble {
+      0%, 100% { transform: rotate(-3deg) translateY(0); }
+      25% { transform: rotate(1deg) translateY(-4px); }
+      50% { transform: rotate(3deg) translateY(0); }
+      75% { transform: rotate(-1deg) translateY(-2px); }
+    }
+
+    .hat-speech {
+      background: rgba(245, 230, 200, 0.1);
+      border: 1px solid #d4a017;
+      border-radius: 15px;
+      padding: 1.2rem 1.5rem;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.4rem;
+      font-style: italic;
+      line-height: 1.6;
+      min-height: 60px;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .quiz-btn {
+      background: linear-gradient(135deg, rgba(139, 0, 0, 0.3), rgba(139, 0, 0, 0.1));
+      border: 1px solid #8B0000;
+      color: #f0e6d3;
+      padding: 1.1rem 1.2rem;
+      border-radius: 10px;
+      font-family: 'Crimson Text', serif;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .quiz-btn:hover {
+      background: linear-gradient(135deg, rgba(139, 0, 0, 0.6), rgba(139, 0, 0, 0.3));
+      box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
+    }
+
+    .quiz-btn:active {
+      transform: scale(0.97);
+    }
+
+    .house-result {
+      display: none;
+      text-align: center;
+      animation: fadeInUp 1s ease;
+      padding: 0 0.5rem;
+    }
+
+    .house-result.visible { display: block; }
+
+    .house-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.2rem;
+      margin: 1rem 0;
+      color: #c8b0ff;
+      text-shadow: 0 0 10px rgba(200, 176, 255, 0.8), 0 0 30px rgba(148, 107, 222, 0.6), 0 0 60px rgba(148, 107, 222, 0.4);
+      animation: ravenclaw-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes ravenclaw-glow {
+      0%, 100% { text-shadow: 0 0 10px rgba(200, 176, 255, 0.8), 0 0 30px rgba(148, 107, 222, 0.6), 0 0 60px rgba(148, 107, 222, 0.4); }
+      50% { text-shadow: 0 0 20px rgba(220, 200, 255, 1), 0 0 50px rgba(148, 107, 222, 0.8), 0 0 90px rgba(148, 107, 222, 0.5); }
+    }
+
+    .house-message {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 500px;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== FELLOWSHIP SECTION ===== */
+    #fellowship {
+      background: radial-gradient(ellipse at bottom, #0d1a0d 0%, #0a0015 70%);
+    }
+
+    #fellowship-vows {
+      background: radial-gradient(ellipse at center, #0d1a0d 0%, #0a0015 70%);
+    }
+
+    .meme-img {
+      width: 90%;
+      max-width: 400px;
+      border-radius: 8px;
+      margin: 1.5rem 0 0.5rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+
+    .meme-caption-top,
+    .meme-caption-bottom {
+      font-family: 'Impact', 'Arial Black', sans-serif;
+      font-size: 1.3rem;
+      color: #fff;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .meme-caption-top {
+      margin-top: -0.5rem;
+    }
+
+    .ring-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin-bottom: 1.5rem;
+    }
+
+    .the-ring {
+      width: 100px;
+      height: 100px;
+      border: 7px solid #d4a017;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 30px rgba(212, 160, 23, 0.5), inset 0 0 20px rgba(212, 160, 23, 0.3);
+      animation: ring-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes ring-glow {
+      0%, 100% { box-shadow: 0 0 30px rgba(212, 160, 23, 0.5), inset 0 0 20px rgba(212, 160, 23, 0.3); }
+      50% { box-shadow: 0 0 50px rgba(212, 160, 23, 0.8), inset 0 0 30px rgba(212, 160, 23, 0.5); }
+    }
+
+    .ring-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Great Vibes', cursive;
+      font-size: 0.95rem;
+      color: #d4a017;
+      text-align: center;
+      width: 80px;
+    }
+
+    .elvish-text {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.1rem;
+      color: #d4a017;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .fellowship-message {
+      max-width: 500px;
+      text-align: center;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .fellowship-vows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .vow-card {
+      background: rgba(212, 160, 23, 0.05);
+      border: 1px solid rgba(212, 160, 23, 0.2);
+      border-radius: 10px;
+      padding: 0.9rem 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 1.2rem;
+    }
+
+    .vow-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(212, 160, 23, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .vow-card:hover::before { left: 100%; }
+
+    .vow-card:hover {
+      border-color: #d4a017;
+    }
+
+    .vow-card:active { transform: scale(0.97); }
+
+    .vow-card.accepted {
+      background: rgba(212, 160, 23, 0.15);
+      border-color: #d4a017;
+    }
+
+    .vow-card.accepted::after {
+      content: ' ';
+      margin-left: 0.5rem;
+    }
+
+    /* ===== LOVE POTION SECTION ===== */
+    #love-potion {
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0015 70%);
+    }
+
+    .cauldron-area {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin-bottom: 1.5rem;
+    }
+
+    .cauldron-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .bubbles-container {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 80px;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -20px;
+      border-radius: 50%;
+      animation: bubble-rise 2s ease-in infinite;
+      opacity: 0;
+    }
+
+    @keyframes bubble-rise {
+      0% { opacity: 0; transform: translateY(0) scale(0.5); }
+      20% { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
+    }
+
+    .ingredients {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+      max-width: 500px;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .ingredient {
+      background: rgba(128, 0, 128, 0.15);
+      border: 1px solid rgba(128, 0, 128, 0.4);
+      border-radius: 25px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1.2rem;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ingredient:active { transform: scale(0.95); }
+
+    .ingredient.added {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+
+    @keyframes ingredient-pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
+    .ingredient-ghost {
+      position: fixed;
+      background: rgba(255, 105, 180, 0.4);
+      border: 1px solid #ff69b4;
+      border-radius: 25px;
+      padding: 0.5rem 1rem;
+      font-family: 'Crimson Text', serif;
+      font-size: 0.9rem;
+      color: #f0e6d3;
+      pointer-events: none;
+      z-index: 200;
+      transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      white-space: nowrap;
+    }
+
+    .ingredient-ghost.flying {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+
+    .potion-result {
+      text-align: center;
+      max-width: 500px;
+      display: none;
+      animation: fadeInUp 1s ease;
+      padding: 0 0.5rem;
+    }
+
+    .potion-result.visible { display: block; }
+
+    .potion-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.8rem;
+      color: #ff69b4;
+      margin-bottom: 1rem;
+    }
+
+    /* ===== CAT COUNCIL SECTION ===== */
+    #map-section {
+      background: radial-gradient(ellipse at center, #1a1508 0%, #0a0015 70%);
+    }
+
+    #map-section .section-title {
+      font-size: 2rem;
+    }
+
+    #map-section .section-subtitle {
+      font-size: 1.2rem;
+    }
+
+    .cat-council {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .cat-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+      -webkit-tap-highlight-color: transparent;
+      flex: 1;
+      min-width: 100px;
+      max-width: 180px;
+    }
+
+    .cat-card:nth-child(1) { margin-top: 0; }
+    .cat-card:nth-child(2) { margin-top: 4.5rem; }
+    .cat-card:nth-child(3) { margin-top: 1.5rem; }
+
+    .cat-card:active { transform: scale(0.95); }
+
+    .cat-card.tapped .cat-svg {
+      animation: cat-bounce 0.6s ease;
+    }
+
+    @keyframes cat-bounce {
+      0% { transform: translateY(0); }
+      30% { transform: translateY(-15px); }
+      50% { transform: translateY(0); }
+      70% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+
+    .cat-svg {
+      width: 150px;
+      height: 150px;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+    }
+
+    .cat-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.8rem;
+      color: #d4a017;
+      margin-top: 0.3rem;
+    }
+
+    .cat-verdict {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: #c9a96e;
+      text-align: center;
+      min-height: 2.5rem;
+      margin-top: 0.3rem;
+      opacity: 0;
+      transition: opacity 0.5s;
+      padding: 0 0.3rem;
+    }
+
+    .cat-verdict.visible {
+      opacity: 1;
+    }
+
+    .cat-approval {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.6rem;
+      color: #d4a017;
+      text-align: center;
+      min-height: 2rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transition: opacity 0.8s;
+      text-shadow: 0 0 15px rgba(212, 160, 23, 0.5);
+    }
+
+    .cat-approval.visible {
+      opacity: 1;
+    }
+
+    /* ===== FINALE ===== */
+    #finale {
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0015 70%);
+      min-height: 100vh;
+      min-height: 100dvh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #yes-page {
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0015 70%);
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    #bedtime-page {
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #0a0015 70%);
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .clothing-item {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .clothing-item.removed {
+      opacity: 0 !important;
+      transform: scale(0.5);
+      pointer-events: none;
+    }
+
+    .finale-heart {
+      margin-bottom: 1.5rem;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      15% { transform: scale(1.15); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.1); }
+    }
+
+    .finale-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ff69b4, #d4a017, #ff69b4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .finale-quote {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.4rem;
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.6;
+      color: #c9a96e;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    .finale-body {
+      text-align: center;
+      max-width: 450px;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      padding: 0 0.5rem;
+    }
+
+    .mischief-managed {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.9rem;
+      color: #8B6914;
+      cursor: pointer;
+      transition: all 0.3s;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid #8B6914;
+      border-radius: 5px;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .mischief-managed:active {
+      transform: scale(0.95);
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      animation: bounce 2s ease-in-out infinite;
+      font-size: 1.5rem;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+      cursor: pointer;
+    }
+
+    .scroll-indicator.hidden { opacity: 0; pointer-events: none; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    /* Hearts rain effect */
+    .hearts-rain {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+    }
+
+    .hearts-rain.active { display: block; }
+
+    .falling-heart {
+      position: absolute;
+      top: -50px;
+      animation: heart-fall linear forwards;
+      font-size: 1.5rem;
+    }
+
+    @keyframes heart-fall {
+      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Section titles */
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 0.4rem;
+      background: linear-gradient(135deg, #d4a017, #f0d68a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #sorting-hat .section-title {
+      font-size: 2.2rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: #8a7a6a;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding: 0 0.5rem;
+    }
+
+    /* Continue button */
+    .continue-btn {
+      background: linear-gradient(135deg, #d4a017, #8B6914);
+      color: #1a0a2e;
+      border: none;
+      padding: 0.7rem 1.8rem;
+      border-radius: 25px;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .continue-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* ===== DESKTOP (min-width: 600px) ===== */
+    @media (min-width: 600px) {
+      .section { padding: 2rem; }
+      .owl-icon { font-size: 3rem; margin-bottom: 1rem; }
+      .intro-title { font-size: 2.5rem; }
+      .envelope-scene { width: 400px; height: 380px; }
+      .envelope { height: 280px; }
+      .letter { height: 260px; font-size: 2rem; }
+      @keyframes letter-out {
+        0%   { transform: translateY(0) rotate(0deg); z-index: 1; }
+        50%  { transform: translateY(-230px) rotate(-2deg); z-index: 1; }
+        51%  { z-index: 10; }
+        100% { transform: translateY(-25px) rotate(-3deg); z-index: 10; }
+      }
+      .wax-seal { width: 60px; height: 60px; font-size: 1.8rem; }
+      .intro-subtitle { font-size: 1.5rem; }
+      .sorting-hat-svg { width: 200px; height: 200px; }
+      .hat-speech { padding: 1.5rem 2rem; font-size: 1.2rem; }
+      .quiz-options { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .quiz-btn { padding: 1rem; }
+      .quiz-btn:hover { transform: translateY(-2px); }
+      .house-name { font-size: 2.5rem; }
+      .house-message { font-size: 1.2rem; }
+      .ring-container { width: 200px; height: 200px; }
+      .the-ring { width: 120px; height: 120px; border-width: 8px; }
+      .ring-text { font-size: 1rem; width: 90px; }
+      .elvish-text { font-size: 1.5rem; }
+      .meme-caption-top, .meme-caption-bottom { font-size: 1.6rem; }
+      .fellowship-message { font-size: 1.2rem; }
+      .vow-card { padding: 1rem 1.5rem; font-size: 1rem; }
+      .vow-card:hover { transform: translateY(-3px); }
+      .cauldron-area { width: 250px; height: 250px; }
+      .ingredient { padding: 0.6rem 1.2rem; font-size: 1rem; }
+      .ingredient:hover { transform: scale(1.05); }
+      .potion-name { font-size: 1.8rem; }
+      .cat-svg { width: 180px; height: 180px; }
+      .cat-name { font-size: 1.1rem; }
+      .cat-verdict { font-size: 1.3rem; }
+      .cat-approval { font-size: 1.8rem; }
+      .section-title { font-size: 2rem; }
+      .section-subtitle { font-size: 1rem; }
+      .finale-heart { font-size: 5rem; }
+      .finale-title { font-size: 2rem; }
+      .finale-quote { font-size: 1.8rem; }
+      .finale-body { font-size: 1.1rem; }
+      .continue-btn { padding: 0.8rem 2rem; font-size: 1rem; }
+      .continue-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(212, 160, 23, 0.4); }
+      .mischief-managed { font-size: 1rem; }
+      .mischief-managed:hover { background: rgba(139, 105, 20, 0.2); box-shadow: 0 0 20px rgba(212, 160, 23, 0.3); }
+    }
+
+    /* Wand cursor trail — desktop only */
+    @media (hover: hover) {
+      .wand-spark {
+        position: fixed;
+        pointer-events: none;
+        z-index: 1000;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #d4a017;
+        animation: spark-fade 0.8s ease forwards;
+      }
+
+      @keyframes spark-fade {
+        0% { opacity: 1; transform: scale(1); }
+        100% { opacity: 0; transform: scale(0); }
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Particles -->
+  <div class="particles-container" id="particles"></div>
+
+  <!-- Hearts Rain (triggered later) -->
+  <div class="hearts-rain" id="heartsRain"></div>
+
+  <!-- ============================== -->
+  <!-- SECTION 1: Hogwarts Letter     -->
+  <!-- ============================== -->
+  <div class="section" id="intro">
+    <div class="owl-icon">🦉</div>
+    <h1 class="intro-title">You've Got Owl Post!</h1>
+    <div class="envelope-scene" id="envelope" onclick="openEnvelope()">
+      <div class="letter">You have been summoned to a Valentine's Day adventure...</div>
+      <div class="envelope">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body"></div>
+        <div class="wax-seal">H</div>
+      </div>
+    </div>
+    <p class="tap-hint" id="tapHint">tap the envelope</p>
+    <button class="continue-btn begin-btn" id="beginBtn" onclick="scrollToSection('sorting-hat')">Tap to Begin Adventure</button>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION 2: Love Sorting Hat    -->
+  <!-- ============================== -->
+  <div class="section" id="sorting-hat">
+    <div class="section-title">The Love Sorting Hat</div>
+
+    <div class="hat-container">
+      <svg class="sorting-hat-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hatGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#6a4e2b"/>
+            <stop offset="50%" style="stop-color:#4a3418"/>
+            <stop offset="100%" style="stop-color:#2a1a08"/>
+          </linearGradient>
+          <radialGradient id="hatGlow" cx="50%" cy="40%" r="50%">
+            <stop offset="0%" style="stop-color:#8B6914; stop-opacity:0.15"/>
+            <stop offset="100%" style="stop-color:#8B6914; stop-opacity:0"/>
+          </radialGradient>
+        </defs>
+        <!-- Glow behind hat -->
+        <ellipse cx="100" cy="120" rx="90" ry="70" fill="url(#hatGlow)">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="3s" repeatCount="indefinite"/>
+        </ellipse>
+        <!-- Hat body -->
+        <path d="M40,160 Q30,140 50,120 L70,50 Q80,20 100,10 Q120,20 115,60 L125,120 Q150,140 140,160 Z" fill="url(#hatGrad)" stroke="#a07828" stroke-width="1"/>
+        <!-- Hat brim -->
+        <ellipse cx="100" cy="160" rx="75" ry="20" fill="#3a2810" stroke="#a07828" stroke-width="1"/>
+        <!-- Hat band -->
+        <path d="M45,150 Q100,135 140,150" stroke="#c9a96e" stroke-width="2.5" fill="none"/>
+        <!-- Wrinkles for character -->
+        <path d="M60,100 Q75,92 82,102" stroke="#2a1a08" stroke-width="1.2" fill="none" opacity="0.4"/>
+        <path d="M92,75 Q105,68 112,80" stroke="#2a1a08" stroke-width="1" fill="none" opacity="0.3"/>
+        <path d="M55,130 Q65,125 70,132" stroke="#2a1a08" stroke-width="1" fill="none" opacity="0.3"/>
+        <!-- Left eye -->
+        <g>
+          <path d="M68,128 Q75,121 82,128" stroke="#c9a96e" stroke-width="2" fill="none">
+            <animate attributeName="d" values="M68,128 Q75,121 82,128;M68,126 Q75,126 82,126;M68,128 Q75,121 82,128" dur="4s" keyTimes="0;0.05;0.1" repeatCount="indefinite"/>
+          </path>
+          <circle cx="75" cy="126" r="1.5" fill="#c9a96e" opacity="0.8">
+            <animate attributeName="opacity" values="0.8;0;0.8" dur="4s" keyTimes="0;0.05;0.1" repeatCount="indefinite"/>
+          </circle>
+        </g>
+        <!-- Right eye -->
+        <g>
+          <path d="M98,128 Q105,121 112,128" stroke="#c9a96e" stroke-width="2" fill="none">
+            <animate attributeName="d" values="M98,128 Q105,121 112,128;M98,126 Q105,126 112,126;M98,128 Q105,121 112,128" dur="4s" keyTimes="0;0.05;0.1" repeatCount="indefinite"/>
+          </path>
+          <circle cx="105" cy="126" r="1.5" fill="#c9a96e" opacity="0.8">
+            <animate attributeName="opacity" values="0.8;0;0.8" dur="4s" keyTimes="0;0.05;0.1" repeatCount="indefinite"/>
+          </circle>
+        </g>
+        <!-- Mouth — talks/moves -->
+        <path d="M78,145 Q90,155 108,145" stroke="#c9a96e" stroke-width="2" fill="none">
+          <animate attributeName="d" values="M78,145 Q90,155 108,145;M78,147 Q90,152 108,147;M78,144 Q90,158 108,144;M78,147 Q90,152 108,147;M78,145 Q90,155 108,145" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <!-- Eyebrows -->
+        <path d="M66,122 Q74,117 83,120" stroke="#c9a96e" stroke-width="1.2" fill="none" opacity="0.6">
+          <animate attributeName="d" values="M66,122 Q74,117 83,120;M66,120 Q74,114 83,118;M66,122 Q74,117 83,120" dur="3s" repeatCount="indefinite"/>
+        </path>
+        <path d="M97,120 Q106,117 114,122" stroke="#c9a96e" stroke-width="1.2" fill="none" opacity="0.6">
+          <animate attributeName="d" values="M97,120 Q106,117 114,122;M97,118 Q106,114 114,120;M97,120 Q106,117 114,122" dur="3s" repeatCount="indefinite"/>
+        </path>
+      </svg>
+    </div>
+
+    <div class="hat-speech" id="hatSpeech">
+      Hmm, what have we here? Another heart to sort! Tell me, dear...
+    </div>
+
+    <div class="quiz-options" id="quizOptions">
+      <!-- Filled dynamically -->
+    </div>
+
+    <div class="house-result" id="houseResult">
+      <div class="house-name" id="houseName"></div>
+      <button class="continue-btn begin-btn visible" onclick="scrollToSection('fellowship')">Alarte Ascendare</button>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION 3: Fellowship of Us    -->
+  <!-- ============================== -->
+  <div class="section" id="fellowship">
+
+    <img src="boromir.jpg" alt="One does not simply walk into Valentine's Day alone" class="meme-img">
+    <div class="meme-caption-top">One does not simply</div>
+    <div class="meme-caption-bottom">walk into Valentine's Day alone</div>
+
+    <button class="continue-btn begin-btn visible" onclick="scrollToSection('fellowship-vows')" style="margin-top: 2rem;">March to Mordor</button>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION 3b: Fellowship Vows    -->
+  <!-- ============================== -->
+  <div class="section" id="fellowship-vows">
+    <div class="section-title">Our Fellowship Pact</div>
+
+<p style="color: #8a7a6a; margin-bottom: 1rem; font-size: 1.2rem;">Accept each one to continue</p>
+
+    <div class="fellowship-vows" id="vowContainer">
+      <div class="vow-card" onclick="acceptVow(this)">
+        "I promise to feed the driver when I am the passenger princess."
+      </div>
+      <div class="vow-card" onclick="acceptVow(this)">
+        "I promise to always go to bed naked."
+      </div>
+      <div class="vow-card" onclick="acceptVow(this)">
+        "I promise to never stop learning about you."
+      </div>
+      <div class="vow-card" onclick="acceptVow(this)">
+        "I promise to keep you from getting hangry."
+      </div>
+    </div>
+
+    <button class="continue-btn begin-btn visible" id="brewBtn" onclick="scrollToSection('love-potion')" style="opacity: 0; pointer-events: none; transition: opacity 0.5s;">Brew Some Magic</button>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION 4: Love Potion Maker   -->
+  <!-- ============================== -->
+  <div class="section" id="love-potion">
+
+    <div class="cauldron-area">
+      <svg class="cauldron-svg" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cauldron body -->
+        <ellipse cx="125" cy="180" rx="80" ry="15" fill="#1a1a1a"/>
+        <path d="M50,120 Q45,180 65,190 Q125,210 185,190 Q205,180 200,120 Z" fill="#2a2a2a" stroke="#444" stroke-width="2"/>
+        <!-- Liquid -->
+        <ellipse cx="125" cy="125" rx="70" ry="12" fill="#ff69b4" opacity="0.6" id="potionLiquid"/>
+        <!-- Rim -->
+        <ellipse cx="125" cy="120" rx="75" ry="15" fill="none" stroke="#555" stroke-width="4"/>
+        <!-- Handles -->
+        <path d="M50,130 Q30,130 35,150 Q40,165 55,160" stroke="#444" stroke-width="4" fill="none"/>
+        <path d="M200,130 Q220,130 215,150 Q210,165 195,160" stroke="#444" stroke-width="4" fill="none"/>
+        <!-- Legs -->
+        <line x1="75" y1="190" x2="70" y2="210" stroke="#444" stroke-width="4"/>
+        <line x1="125" y1="195" x2="125" y2="215" stroke="#444" stroke-width="4"/>
+        <line x1="175" y1="190" x2="180" y2="210" stroke="#444" stroke-width="4"/>
+        <!-- Steam -->
+        <path d="M100,110 Q95,90 105,75" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none">
+          <animate attributeName="d" values="M100,110 Q95,90 105,75;M100,110 Q110,85 100,70;M100,110 Q95,90 105,75" dur="3s" repeatCount="indefinite"/>
+        </path>
+        <path d="M140,108 Q150,85 135,70" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none">
+          <animate attributeName="d" values="M140,108 Q150,85 135,70;M140,108 Q130,80 145,65;M140,108 Q150,85 135,70" dur="4s" repeatCount="indefinite"/>
+        </path>
+      </svg>
+      <div class="bubbles-container" id="bubblesContainer"></div>
+    </div>
+
+    <div class="potion-result" id="potionResult">
+      <div class="potion-name">Amortentia Perfecta!</div>
+      <button class="continue-btn begin-btn visible" onclick="scrollToSection('map-section')">Discuss with the Fellowship</button>
+    </div>
+
+    <p id="potionInstruction" style="color: #c9a96e; margin-bottom: 1rem; font-size: 1.3rem; text-align: center; transition: opacity 0.5s;">Add all of the following ingredients to the potion</p>
+
+    <div class="ingredients" id="ingredients">
+      <span class="ingredient" onclick="addIngredient(this)">Inside Jokes</span>
+      <span class="ingredient" onclick="addIngredient(this)">Bear Hugs</span>
+      <span class="ingredient" onclick="addIngredient(this)">Forehead Kisses</span>
+      <span class="ingredient" onclick="addIngredient(this)">Phone Calls Before Bed</span>
+      <span class="ingredient" onclick="addIngredient(this)">Reminiscing About Movies and Music</span>
+      <span class="ingredient" onclick="addIngredient(this)">Being Able to Say Sorry</span>
+      <span class="ingredient" onclick="addIngredient(this)">Being a Little Rough ;)</span>
+      <span class="ingredient" onclick="addIngredient(this)">Planning a Future Together</span>
+    </div>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION 5: The Cat Council     -->
+  <!-- ============================== -->
+  <div class="section" id="map-section">
+    <div class="section-title">The Cat Council</div>
+    <div class="section-subtitle">Tap each cat to hear their wisdom</div>
+
+    <div class="cat-council">
+      <div class="cat-card" id="catMomo" onclick="tapCat('momo')">
+        <svg class="cat-svg" viewBox="0 0 120 120">
+          <!-- Momo - all white -->
+          <ellipse cx="60" cy="85" rx="30" ry="25" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+          <circle cx="60" cy="50" r="22" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+          <polygon points="42,38 38,18 50,32" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+          <polygon points="78,38 82,18 70,32" fill="#f5f5f5" stroke="#ddd" stroke-width="1"/>
+          <polygon points="42,38 38,18 50,32" fill="#ffe0e6" opacity="0.5"/>
+          <polygon points="78,38 82,18 70,32" fill="#ffe0e6" opacity="0.5"/>
+          <ellipse cx="52" cy="48" rx="4" ry="4.5" fill="#7ec8e3"/>
+          <ellipse cx="68" cy="48" rx="4" ry="4.5" fill="#7ec8e3"/>
+          <circle cx="53" cy="47" r="1.5" fill="#fff"/>
+          <circle cx="69" cy="47" r="1.5" fill="#fff"/>
+          <ellipse cx="60" cy="55" rx="3" ry="2" fill="#ffb6c1"/>
+          <path d="M55,59 Q60,63 65,59" stroke="#ccc" stroke-width="0.8" fill="none"/>
+          <line x1="35" y1="52" x2="48" y2="54" stroke="#ddd" stroke-width="0.5"/>
+          <line x1="35" y1="56" x2="48" y2="56" stroke="#ddd" stroke-width="0.5"/>
+          <line x1="72" y1="54" x2="85" y2="52" stroke="#ddd" stroke-width="0.5"/>
+          <line x1="72" y1="56" x2="85" y2="56" stroke="#ddd" stroke-width="0.5"/>
+          <path d="M35,100 Q30,110 25,115" stroke="#f5f5f5" stroke-width="5" stroke-linecap="round" fill="none">
+            <animate attributeName="d" values="M35,100 Q30,110 25,115;M35,100 Q28,108 30,115;M35,100 Q30,110 25,115" dur="2s" repeatCount="indefinite"/>
+          </path>
+        </svg>
+        <div class="cat-name">Momo</div>
+        <div class="cat-verdict" id="verdictMomo"></div>
+      </div>
+
+      <div class="cat-card" id="catMissy" onclick="tapCat('missy')">
+        <svg class="cat-svg" viewBox="0 0 120 120">
+          <!-- Missy - orange tabby -->
+          <ellipse cx="60" cy="85" rx="30" ry="25" fill="#e8943a" stroke="#c67a25" stroke-width="1"/>
+          <path d="M40,80 Q50,75 60,80 Q70,75 80,80" stroke="#c67a25" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <path d="M38,90 Q50,85 62,90 Q72,85 82,90" stroke="#c67a25" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <circle cx="60" cy="50" r="22" fill="#e8943a" stroke="#c67a25" stroke-width="1"/>
+          <path d="M42,45 Q60,40 78,45" stroke="#c67a25" stroke-width="1.5" fill="none" opacity="0.4"/>
+          <polygon points="42,38 38,18 50,32" fill="#e8943a" stroke="#c67a25" stroke-width="1"/>
+          <polygon points="78,38 82,18 70,32" fill="#e8943a" stroke="#c67a25" stroke-width="1"/>
+          <polygon points="42,38 38,18 50,32" fill="#ffe0e6" opacity="0.3"/>
+          <polygon points="78,38 82,18 70,32" fill="#ffe0e6" opacity="0.3"/>
+          <ellipse cx="52" cy="48" rx="4" ry="4.5" fill="#5a8f3c"/>
+          <ellipse cx="68" cy="48" rx="4" ry="4.5" fill="#5a8f3c"/>
+          <circle cx="53" cy="47" r="1.5" fill="#fff"/>
+          <circle cx="69" cy="47" r="1.5" fill="#fff"/>
+          <ellipse cx="60" cy="55" rx="3" ry="2" fill="#ffb6c1"/>
+          <path d="M55,59 Q60,63 65,59" stroke="#c67a25" stroke-width="0.8" fill="none"/>
+          <line x1="35" y1="52" x2="48" y2="54" stroke="#c67a25" stroke-width="0.5"/>
+          <line x1="35" y1="56" x2="48" y2="56" stroke="#c67a25" stroke-width="0.5"/>
+          <line x1="72" y1="54" x2="85" y2="52" stroke="#c67a25" stroke-width="0.5"/>
+          <line x1="72" y1="56" x2="85" y2="56" stroke="#c67a25" stroke-width="0.5"/>
+          <path d="M35,100 Q30,110 25,115" stroke="#e8943a" stroke-width="5" stroke-linecap="round" fill="none">
+            <animate attributeName="d" values="M35,100 Q30,110 25,115;M35,100 Q32,112 35,115;M35,100 Q30,110 25,115" dur="1.5s" repeatCount="indefinite"/>
+          </path>
+        </svg>
+        <div class="cat-name">Missy</div>
+        <div class="cat-verdict" id="verdictMissy"></div>
+      </div>
+
+      <div class="cat-card" id="catPidge" onclick="tapCat('pidge')">
+        <svg class="cat-svg" viewBox="0 0 120 120">
+          <!-- Pidge - all charcoal -->
+          <ellipse cx="60" cy="85" rx="30" ry="25" fill="#3a3a3a" stroke="#555" stroke-width="1"/>
+          <circle cx="60" cy="50" r="22" fill="#3a3a3a" stroke="#555" stroke-width="1"/>
+          <polygon points="42,38 38,18 50,32" fill="#3a3a3a" stroke="#555" stroke-width="1"/>
+          <polygon points="78,38 82,18 70,32" fill="#3a3a3a" stroke="#555" stroke-width="1"/>
+          <polygon points="42,38 38,18 50,32" fill="#ffe0e6" opacity="0.2"/>
+          <polygon points="78,38 82,18 70,32" fill="#ffe0e6" opacity="0.2"/>
+          <ellipse cx="52" cy="48" rx="4" ry="4.5" fill="#d4a017"/>
+          <ellipse cx="68" cy="48" rx="4" ry="4.5" fill="#d4a017"/>
+          <circle cx="53" cy="47" r="1.5" fill="#fff"/>
+          <circle cx="69" cy="47" r="1.5" fill="#fff"/>
+          <ellipse cx="60" cy="55" rx="3" ry="2" fill="#555"/>
+          <path d="M55,59 Q60,63 65,59" stroke="#555" stroke-width="0.8" fill="none"/>
+          <line x1="35" y1="52" x2="48" y2="54" stroke="#555" stroke-width="0.5"/>
+          <line x1="35" y1="56" x2="48" y2="56" stroke="#555" stroke-width="0.5"/>
+          <line x1="72" y1="54" x2="85" y2="52" stroke="#555" stroke-width="0.5"/>
+          <line x1="72" y1="56" x2="85" y2="56" stroke="#555" stroke-width="0.5"/>
+          <path d="M85,100 Q90,110 95,115" stroke="#3a3a3a" stroke-width="5" stroke-linecap="round" fill="none">
+            <animate attributeName="d" values="M85,100 Q90,110 95,115;M85,100 Q88,108 85,115;M85,100 Q90,110 95,115" dur="1.8s" repeatCount="indefinite"/>
+          </path>
+        </svg>
+        <div class="cat-name">Pidge</div>
+        <div class="cat-verdict" id="verdictPidge"></div>
+      </div>
+    </div>
+
+    <div class="cat-approval" id="catApproval"></div>
+
+    <button class="continue-btn begin-btn visible" id="catApprovedBtn" onclick="scrollToSection('finale')" disabled style="opacity: 0; pointer-events: none;">Approved</button>
+  </div>
+
+  <!-- ============================== -->
+  <!-- SECTION 6: Finale              -->
+  <!-- ============================== -->
+  <div class="section" id="finale">
+    <div class="finale-heart">
+      <img src="yes-lawd.gif" alt="Yes Lawd" style="width: 90%; max-width: 400px; border-radius: 12px;">
+    </div>
+    <div class="finale-title">Taylor, will you be my Valentine?</div>
+
+    <div class="valentine-buttons" style="display: flex; gap: 1.5rem; margin-top: 2rem; position: relative;">
+      <button class="continue-btn begin-btn visible" onclick="sayYes()" style="background: linear-gradient(135deg, #2e8b2e, #1a5c1a); color: #fff; font-size: 1.4rem; padding: 1.2rem 2.5rem; border: 2px solid #3cb043;">Yes</button>
+      <button class="continue-btn begin-btn visible" id="noBtn" onclick="moveNoButton()" style="background: linear-gradient(135deg, #b00000, #700000); color: #fff; font-size: 1.4rem; padding: 1.2rem 2.5rem; border: 2px solid #ff3333;">No</button>
+    </div>
+  </div>
+
+  <div class="section" id="yes-page" style="display: none;">
+    <img src="goose.gif" alt="Goose" style="width: 300px; border-radius: 12px; margin-bottom: 2rem;">
+    <div class="finale-title">I knew it!</div>
+    <button class="continue-btn begin-btn visible" onclick="goToBedtime()" style="margin-top: 2rem;">Fast Forward to Tonight...</button>
+  </div>
+
+  <div class="section" id="bedtime-page" style="display: none;">
+    <div class="finale-title">Tap to undress me</div>
+    <div class="stickman-scene" style="position: relative; width: 320px; height: 420px; margin-top: 1rem;">
+      <img src="keith-stick.png" alt="Keith" style="width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0;">
+      <!-- Shirt -->
+      <svg class="clothing-item" id="clothShirt" onclick="removeClothing(this)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;" viewBox="0 0 320 420">
+        <polygon points="120,175 200,175 210,195 195,195 195,250 125,250 125,195 110,195" fill="#3a7bd5"/>
+        <!-- Sleeves -->
+        <polygon points="110,175 120,175 125,195 110,195 90,185" fill="#3a7bd5"/>
+        <polygon points="200,175 210,175 230,185 210,195 195,195" fill="#3a7bd5"/>
+        <!-- Collar -->
+        <path d="M140,175 L160,185 L180,175" stroke="#2a5ba5" stroke-width="2" fill="none"/>
+      </svg>
+      <!-- Pants -->
+      <svg class="clothing-item" id="clothPants" onclick="removeClothing(this)" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;" viewBox="0 0 320 420">
+        <polygon points="115,250 205,250 205,268 185,268 178,345 152,345 163,268 157,268 148,345 122,345 133,268 115,268" fill="#444"/>
+        <!-- Belt -->
+        <rect x="115" y="248" width="90" height="8" rx="2" fill="#8B6914"/>
+        <rect x="155" y="248" width="12" height="8" rx="1" fill="#d4a017"/>
+      </svg>
+      <div id="undressMessage" style="position: absolute; top: 58%; left: 50%; transform: translate(-50%, -50%); font-size: 3.5rem; opacity: 0; transition: opacity 0.8s; pointer-events: none; z-index: 10;"></div>
+    </div>
+    <div style="font-size: 3rem; margin-top: 1rem;">😘</div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator" id="scrollIndicator" onclick="scrollDown()">↓</div>
+
+  <script>
+    // ===== PARTICLES =====
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const colors = ['#d4a017', '#ff69b4', '#f0d68a', '#c9a96e', '#ff1493'];
+      const count = window.innerWidth < 600 ? 20 : 40;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = p.style.height = (Math.random() * 4 + 2) + 'px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        container.appendChild(p);
+      }
+    }
+    createParticles();
+
+    // ===== WAND TRAIL (desktop only) =====
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.addEventListener('mousemove', (e) => {
+        if (Math.random() > 0.7) {
+          const spark = document.createElement('div');
+          spark.className = 'wand-spark';
+          spark.style.left = e.clientX + 'px';
+          spark.style.top = e.clientY + 'px';
+          spark.style.background = ['#d4a017', '#ff69b4', '#f0d68a'][Math.floor(Math.random() * 3)];
+          document.body.appendChild(spark);
+          setTimeout(() => spark.remove(), 800);
+        }
+      });
+    }
+
+    // ===== ENVELOPE =====
+    function openEnvelope() {
+      const scene = document.getElementById('envelope');
+      if (scene.classList.contains('opened')) return;
+      scene.classList.add('opened');
+      document.getElementById('tapHint').style.display = 'none';
+
+      setTimeout(() => {
+        document.getElementById('introSubtitle').classList.add('visible');
+      }, 1000);
+
+      setTimeout(() => {
+        document.getElementById('beginBtn').classList.add('visible');
+      }, 1800);
+    }
+
+    // ===== SORTING HAT QUIZ =====
+    const quizQuestions = [
+      {
+        question: "On a perfect date night, you'd rather...",
+        options: [
+          { text: "Attempt to watch a movie the whole way through", house: "gryffindor" },
+          { text: "Beat me at arcade basketball", house: "hufflepuff" },
+          { text: "Get another sippy cup for the collection", house: "ravenclaw" },
+          { text: "In bed at 7, not sleeping till midnight", house: "slytherin" }
+        ]
+      },
+      {
+        question: "Your love language is best described as...",
+        options: [
+          { text: "Touch", house: "gryffindor" },
+          { text: "Touch", house: "hufflepuff" },
+          { text: "Touch", house: "ravenclaw" },
+          { text: "All of the above", house: "slytherin" }
+        ]
+      },
+      {
+        question: "Our couple's Patronus would be...",
+        options: [
+          { text: "A pair of otters holding hands", house: "hufflepuff" },
+          { text: "A magnificent stag and doe", house: "gryffindor" },
+          { text: "Two elegant swans", house: "ravenclaw" },
+          { text: "A dragon, obviously", house: "slytherin" }
+        ]
+      }
+    ];
+
+    let currentQuestion = 0;
+    let housePoints = { gryffindor: 0, hufflepuff: 0, ravenclaw: 0, slytherin: 0 };
+
+    const houseData = {
+      gryffindor: {
+        name: "Gryffindor!",
+        color: "#ae0001",
+        emoji: "🦁",
+        message: "Your love is BOLD and BRAVE! Like Harry running into danger to save his friends, you'd do anything for your person. Your love story is an epic adventure — dramatic, passionate, and always exciting. You probably also argue about who's the big spoon. (It's you. You're the big spoon.)"
+      },
+      hufflepuff: {
+        name: "Hufflepuff!",
+        color: "#ecb939",
+        emoji: "🦡",
+        message: "Your love is WARM and LOYAL! Like a cozy common room next to the kitchens, your relationship is built on comfort, trust, and an unreasonable amount of snacks. You're the couple that everyone's jealous of because you just genuinely LIKE each other. Also you definitely share food."
+      },
+      ravenclaw: {
+        name: "Ravenclaw!",
+        color: "#c8b0ff",
+        emoji: "",
+        message: "Your love is DEEP and THOUGHTFUL! You're the couple who finishes each other's sentences and has intellectual debates at 2 AM. Your idea of romance is reading side by side in comfortable silence. You probably fell in love over a shared book recommendation. Nerds. (Adorable nerds.)"
+      },
+      slytherin: {
+        name: "Slytherin!",
+        color: "#1a472a",
+        emoji: "🐍",
+        message: "Your love is AMBITIOUS and PASSIONATE! You're the power couple. The Gomez and Morticia. You roast each other mercilessly but heaven help anyone ELSE who tries. Your love language is sarcasm wrapped in devotion, and honestly? It's kind of iconic."
+      }
+    };
+
+    function showQuestion() {
+      if (currentQuestion >= quizQuestions.length) {
+        showResult();
+        return;
+      }
+
+      const q = quizQuestions[currentQuestion];
+      document.getElementById('hatSpeech').textContent = q.question;
+
+      const optionsDiv = document.getElementById('quizOptions');
+      optionsDiv.innerHTML = '';
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-btn';
+        btn.textContent = opt.text;
+        btn.onclick = () => {
+          housePoints[opt.house]++;
+          currentQuestion++;
+          showQuestion();
+        };
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      document.getElementById('quizOptions').style.display = 'none';
+      const speechEl = document.getElementById('hatSpeech');
+      const baseText = 'Plenty of courage, I see. Not a bad mind, either';
+      speechEl.textContent = baseText + '.';
+
+      let dotCount = 1;
+      const dotInterval = setInterval(() => {
+        dotCount = (dotCount % 3) + 1;
+        speechEl.textContent = baseText + '.'.repeat(dotCount);
+      }, 500);
+
+      const data = houseData['ravenclaw'];
+
+      setTimeout(() => {
+        clearInterval(dotInterval);
+        speechEl.style.display = 'none';
+        const result = document.getElementById('houseResult');
+        result.classList.add('visible');
+        document.getElementById('houseName').textContent = (data.emoji ? data.emoji + ' ' : '') + data.name;
+        document.getElementById('houseName').style.color = data.color;
+      }, 5000);
+    }
+
+    showQuestion();
+
+    // ===== FELLOWSHIP VOWS =====
+    let vowsAccepted = 0;
+    function acceptVow(card) {
+      if (card.classList.contains('accepted')) return;
+      card.classList.add('accepted');
+      vowsAccepted++;
+
+      const brewBtn = document.getElementById('brewBtn');
+      brewBtn.style.opacity = vowsAccepted / 4;
+
+      if (vowsAccepted >= 4) {
+        brewBtn.style.pointerEvents = 'auto';
+      }
+    }
+
+    // ===== LOVE POTION =====
+    let ingredientsAdded = 0;
+    function addIngredient(el) {
+      if (el.classList.contains('added')) return;
+      el.classList.add('added');
+      ingredientsAdded++;
+
+      // Create a flying ghost that goes to the cauldron
+      const elRect = el.getBoundingClientRect();
+      const cauldron = document.querySelector('.cauldron-area');
+      const cauldronRect = cauldron.getBoundingClientRect();
+      const targetX = cauldronRect.left + cauldronRect.width / 2 - elRect.width / 2;
+      const targetY = cauldronRect.top + cauldronRect.height * 0.4;
+
+      const ghost = document.createElement('div');
+      ghost.className = 'ingredient-ghost';
+      ghost.textContent = el.textContent;
+      ghost.style.left = elRect.left + 'px';
+      ghost.style.top = elRect.top + 'px';
+      document.body.appendChild(ghost);
+
+      requestAnimationFrame(() => {
+        ghost.style.left = targetX + 'px';
+        ghost.style.top = targetY + 'px';
+        ghost.classList.add('flying');
+      });
+
+      setTimeout(() => {
+        ghost.remove();
+        createBubble();
+        createBubble();
+        createBubble();
+      }, 700);
+
+      // Change potion color as more are added
+      const liquid = document.getElementById('potionLiquid');
+      const intensity = Math.min(ingredientsAdded / 8, 1);
+      liquid.setAttribute('opacity', 0.3 + intensity * 0.5);
+
+      if (ingredientsAdded >= 8) {
+        setTimeout(() => {
+          document.getElementById('potionInstruction').style.opacity = '0';
+          document.getElementById('ingredients').style.opacity = '0';
+          document.getElementById('ingredients').style.transition = 'opacity 0.5s';
+        }, 300);
+        setTimeout(() => {
+          document.getElementById('potionInstruction').style.display = 'none';
+          document.getElementById('ingredients').style.display = 'none';
+          document.getElementById('potionResult').classList.add('visible');
+          document.getElementById('brewingTitle').style.display = 'none';
+          triggerHeartsRain();
+        }, 1000);
+      }
+    }
+
+    function createBubble() {
+      const container = document.getElementById('bubblesContainer');
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      const size = Math.random() * 12 + 6;
+      bubble.style.width = bubble.style.height = size + 'px';
+      bubble.style.left = Math.random() * 100 + 'px';
+      bubble.style.background = `radial-gradient(circle, rgba(255,105,180,0.6), rgba(255,20,147,0.2))`;
+      bubble.style.animationDelay = Math.random() * 0.5 + 's';
+      container.appendChild(bubble);
+      setTimeout(() => bubble.remove(), 2000);
+    }
+
+    // Keep bubbles going
+    setInterval(() => {
+      if (ingredientsAdded > 0 && ingredientsAdded < 8) createBubble();
+    }, 800);
+
+    // ===== CAT COUNCIL =====
+    let catsApproved = 0;
+    const catVerdicts = {
+      momo: ["\"Shut up and pet me already.\""],
+      missy: ["\"Where is that fucker Momo\""],
+      pidge: ["\"Can I go now?\""]
+    };
+
+    function tapCat(name) {
+      const card = document.getElementById('cat' + name.charAt(0).toUpperCase() + name.slice(1));
+      if (card.classList.contains('tapped')) return;
+      card.classList.add('tapped');
+      catsApproved++;
+
+      const verdicts = catVerdicts[name];
+      const verdict = verdicts[Math.floor(Math.random() * verdicts.length)];
+      const verdictEl = document.getElementById('verdict' + name.charAt(0).toUpperCase() + name.slice(1));
+      verdictEl.textContent = verdict;
+      verdictEl.classList.add('visible');
+
+      if (name === 'pidge') {
+        setTimeout(() => {
+          const svg = card.querySelector('.cat-svg');
+          svg.style.transition = 'transform 0.8s ease-in, opacity 0.8s ease-in';
+          svg.style.transform = 'translateX(200px) scale(0.5)';
+          svg.style.opacity = '0';
+        }, 1200);
+      }
+
+      if (catsApproved >= 3) {
+        setTimeout(() => {
+          const approval = document.getElementById('catApproval');
+          approval.textContent = 'The Council Has Spoken';
+          approval.classList.add('visible');
+          const approvedBtn = document.getElementById('catApprovedBtn');
+          approvedBtn.textContent = 'Approved';
+          approvedBtn.disabled = false;
+          approvedBtn.style.opacity = '1';
+          approvedBtn.style.pointerEvents = 'auto';
+          approvedBtn.style.transition = 'opacity 0.6s ease';
+        }, 800);
+      }
+    }
+
+    // ===== HEARTS RAIN =====
+    function triggerHeartsRain() {
+      const container = document.getElementById('heartsRain');
+      container.classList.add('active');
+      const hearts = ['💖', '💕', '💗', '💝', '✨', '💘'];
+
+      const heartCount = window.innerWidth < 600 ? 25 : 50;
+      for (let i = 0; i < heartCount; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'falling-heart';
+          heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+          heart.style.left = Math.random() * 100 + '%';
+          heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+          heart.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+          container.appendChild(heart);
+          setTimeout(() => heart.remove(), 4000);
+        }, i * 100);
+      }
+
+      setTimeout(() => container.classList.remove('active'), 6000);
+    }
+
+    // ===== MISCHIEF MANAGED =====
+    function sayYes() {
+      triggerHeartsRain();
+      const yesPage = document.getElementById('yes-page');
+      yesPage.style.display = 'flex';
+      yesPage.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function moveNoButton() {
+      const btn = document.getElementById('noBtn');
+      const section = document.getElementById('finale');
+      const rect = section.getBoundingClientRect();
+      const maxX = rect.width - btn.offsetWidth - 20;
+      const maxY = rect.height - btn.offsetHeight - 20;
+      const randX = Math.floor(Math.random() * maxX) - maxX / 2;
+      const randY = Math.floor(Math.random() * maxY) - maxY / 2;
+      btn.style.position = 'absolute';
+      btn.style.transition = 'all 0.3s ease';
+      btn.style.left = (rect.width / 2 + randX) + 'px';
+      btn.style.top = (rect.height / 2 + randY) + 'px';
+      btn.style.transform = 'translate(-50%, -50%)';
+    }
+
+    function goToBedtime() {
+      const bedtime = document.getElementById('bedtime-page');
+      bedtime.style.display = 'flex';
+      bedtime.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function removeClothing(el) {
+      const shirt = document.getElementById('clothShirt');
+      const pants = document.getElementById('clothPants');
+      if (shirt.classList.contains('removed')) return;
+      shirt.classList.add('removed');
+      pants.classList.add('removed');
+      const msg = document.getElementById('undressMessage');
+      msg.textContent = '😏';
+      msg.style.opacity = '1';
+    }
+
+    // ===== SCROLL INDICATOR =====
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+      if (scrolled >= total - 100) {
+        scrollIndicator.classList.add('hidden');
+      } else {
+        scrollIndicator.classList.remove('hidden');
+      }
+    });
+
+    function scrollDown() {
+      window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
