@@ -1234,7 +1234,7 @@
   <div class="section" id="yes-page" style="display: none;">
     <img src="goose.gif" alt="Goose" style="width: 300px; border-radius: 12px; margin-bottom: 2rem;">
     <div class="finale-title">I knew it!</div>
-    <button class="continue-btn begin-btn visible" onclick="goToBedtime()" style="margin-top: 2rem;">Fast Forward to Tonight...</button>
+    <button class="continue-btn begin-btn visible" onclick="goToBedtime()" style="margin-top: 2rem;">Fast Forward to Later Tonight...</button>
   </div>
 
   <div class="section" id="bedtime-page" style="display: none;">
@@ -1490,7 +1490,6 @@
           document.getElementById('potionInstruction').style.display = 'none';
           document.getElementById('ingredients').style.display = 'none';
           document.getElementById('potionResult').classList.add('visible');
-          document.getElementById('brewingTitle').style.display = 'none';
           triggerHeartsRain();
         }, 1000);
       }
